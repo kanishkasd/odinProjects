@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="./index.js"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <title>Library</title>
+  </head>
+  <body>
+    <button id="newBook">New Book</button>
+    <form class="new_book hidden">
+      <input type="text" id="author" placeholder="author" required />
+
+      <input type="text" id="title" placeholder="title" required />
+
+      <input type="text" id="pages" placeholder="pages" required />
+      <button type="submit">Add Book</button>
+    </form>
+    <div id="library"></div>
+  </body>
+</html>
