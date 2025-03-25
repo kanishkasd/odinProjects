@@ -16,5 +16,34 @@ function GameBoard() {
     const availableCells = board
       .filter((row) => row[column].getValue === 0)
       .map((row) => row[column]);
+
+    if (!availableCells.length) return;
+
+    const lowestRow = availableCells.length - 1;
+
+    board[lowestRow][column].addToken(player);
+
+    const printBoard = () => {
+      const boardWithCellValues = board.map((row) =>
+        row.map((cell) => cell.getValue())
+      );
+      console.log(boardWithCellValues);
+    };
+    return { getBoard, dropToken, printBoard };
+  };
+}
+
+function Cell() {
+  let value = 0;
+
+  const addToken = (player) => {
+    value = player;
+  };
+
+  const getValue = () => value;
+
+  return {
+    addToken,
+    getValue,
   };
 }
