@@ -1,4 +1,4 @@
-function GameBoard() {
+function Gameboard() {
   const rows = 6;
   const columns = 7;
 
@@ -12,9 +12,9 @@ function GameBoard() {
   }
   const getBoard = () => board;
 
-  const dropToken = (player, column) => {
+  const dropToken = (column, player) => {
     const availableCells = board
-      .filter((row) => row[column].getValue === 0)
+      .filter((row) => row[column].getValue() === 0)
       .map((row) => row[column]);
 
     if (!availableCells.length) return;
@@ -22,15 +22,14 @@ function GameBoard() {
     const lowestRow = availableCells.length - 1;
 
     board[lowestRow][column].addToken(player);
-
-    const printBoard = () => {
-      const boardWithCellValues = board.map((row) =>
-        row.map((cell) => cell.getValue())
-      );
-      console.log(boardWithCellValues);
-    };
-    return { getBoard, dropToken, printBoard };
   };
+  const printBoard = () => {
+    const boardWithCellValues = board.map((row) =>
+      row.map((cell) => cell.getValue())
+    );
+    console.log(boardWithCellValues);
+  };
+  return { getBoard, dropToken, printBoard };
 }
 
 function Cell() {
@@ -47,3 +46,54 @@ function Cell() {
     getValue,
   };
 }
+
+function gameController(
+  playerOneName = "PlayerOne",
+  playerTwoName = "PlayerTwo"
+) {
+  const board = Gameboard();
+
+  const players = [
+    {
+      name: playerOneName,
+      token: 1,
+    },
+    {
+      name: playerTwoName,
+      token: 2,
+    },
+  ];
+
+  let activePlayer = players[0];
+
+  const switchPlayerTurn = () => {
+    activePlayer = activePlayer === players[0] ? players[1] : players[0];
+  };
+
+  const getActivePlayer = () => activePlayer;
+
+  const printNewRound = () => {
+    board.printBoard();
+
+    console.log(`${getActivePlayer().name}'s turn`);
+  };
+
+  const playRound = (column) => {
+    console.log(
+      `Dropping ${getActivePlayer().name}'s token into column ${column}...`
+    );
+
+    board.dropToken(column, getActivePlayer().token);
+
+    switchPlayerTurn();
+    printNewRound();
+  };
+
+  printNewRound();
+  return {
+    playRound,
+    getActivePlayer,
+  };
+}
+
+const game = gameController();
