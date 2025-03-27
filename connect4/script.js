@@ -47,7 +47,7 @@ function Cell() {
   };
 }
 
-function gameController(
+function GameController(
   playerOneName = "PlayerOne",
   playerTwoName = "PlayerTwo"
 ) {
@@ -85,6 +85,8 @@ function gameController(
 
     board.dropToken(column, getActivePlayer().token);
 
+    // create winner function here who is the winner
+
     switchPlayerTurn();
     printNewRound();
   };
@@ -93,7 +95,48 @@ function gameController(
   return {
     playRound,
     getActivePlayer,
+    getBoard: board.getBoard,
   };
 }
 
-const game = gameController();
+function ScreenController() {
+  const game = GameController();
+  const playerTurnDiv = document.querySelector(".turn");
+
+  const boardDiv = document.querySelector(".board");
+
+  const updateScreen = () => {
+    boardDiv.textContent = "";
+
+    const board = game.getBoard();
+    const activePlayer = game.getActivePlayer();
+
+    playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
+
+    board.forEach((row) => {
+      row.forEach((cell, index) => {
+        const cellButton = document.createElement("button");
+        cellButton.classList.add("cell");
+
+        cellButton.dataset.column = index;
+        cellButton.textContent = cell.getValue();
+        boardDiv.appendChild(cellButton);
+      });
+    });
+  };
+
+  function clickHandleBoard(e) {
+    const selectedColumn = e.target.dataset.column;
+
+    if (!selectedColumn) return;
+
+    game.playRound(selectedColumn);
+    updateScreen();
+  }
+
+  boardDiv.addEventListener("click", clickHandleBoard);
+
+  updateScreen();
+}
+
+ScreenController();
